@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/cchou/schematron.git
-  revision: fe7d7d89de7d0b377b3dba78716a05ffba15eb5b
+  remote: git://github.com/fcla/schematron.git
+  revision: 1e67cecdd563ef2b82a4b0b0a3922b2d67b55c97
   tag: v1.1.3
   specs:
     schematron (1.1.3)
