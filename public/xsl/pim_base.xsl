@@ -204,7 +204,7 @@
                 <!-- create a structMap if this is our first sighting -->
                 <xsl:when test="not($orphans)">
  
-                  <structMap LABEL="ORPHANED_FILES">
+                  <structMap LABEL="SINGLE_FILE">
                     <div>
                       <fptr>
                         <xsl:attribute name="FILEID">
