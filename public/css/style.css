@@ -166,7 +166,7 @@ h1, h2, h3, h4, h5, h6, p, form {
 	padding-top:25px;
 }
 
-#email {
+#download {
 	float:left;
 	width:500px;
 	background-color:#004D78;
@@ -174,7 +174,7 @@ h1, h2, h3, h4, h5, h6, p, form {
 	padding-top:5px;
 }
 
-#email a{
+#download a{
 	font-size:11px;
 	color:#fff;
 	font-weight:normal;
@@ -182,7 +182,7 @@ h1, h2, h3, h4, h5, h6, p, form {
 	padding:0px 40px;
 }
 
-#email a:hover{
+#download a:hover{
 	font-size:11px;
 	color:#fff;
 	font-weight:normal;
