@@ -1,15 +1,20 @@
-require 'rubygems'
-require 'bundler'
-Bundler.setup
-
-require 'rspec'
-require 'rack/test'
-require 'webrat'
+#require 'rubygems'
+#require 'bundler'
+#Bundler.setup
 require 'mock_server'
 
 # setup the app
-app_file = File.join(File.dirname(__FILE__), '../../app.rb')
+#app_file = File.join(File.dirname(__FILE__), '../../app.rb')
+#require app_file
+
+app_file = File.join(File.dirname(__FILE__), *%w[.. .. app.rb])
 require app_file
+Sinatra::Application.app_file = app_file
+
+require 'rspec/expectations'
+require 'rspec/collection_matchers'
+require 'rack/test'
+require 'webrat'
 
 $:.unshift File.join(File.dirname(__FILE__), '../../lib')
 require 'validation'
@@ -18,10 +23,15 @@ Webrat.configure do |config|
   config.mode = :rack
 end
 
-Sinatra::Application.set :environment, :test
+#Sinatra::Application.set :environment, :test
 
-World do
-
+class MyWorld
+  include Rack::Test::Methods
+  include Webrat::Methods
+  include Webrat::Matchers
+  
+  Webrat::Methods.delegate_to_session :response_code, :response_body
+  
   def app
     Sinatra::Application
   end
@@ -35,11 +45,10 @@ World do
     open(file) { |io| io.read }
   end
 
-  include Rack::Test::Methods
-  include Webrat::Methods
-  include Webrat::Matchers
+
 end
 
+World{MyWorld.new}
 include MockServer::Methods
 
 mock_server do

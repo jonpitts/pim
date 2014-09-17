@@ -49,20 +49,20 @@ When /^I press describe$/ do
 
 Then /^it should have an object with an object identifier that matches my input$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('//premis:objectIdentifierType', NS).content.should eql("URI")
-  doc.find_first('//premis:objectIdentifierValue', NS).content.should eql("info:fcla/code/pim/wip.png")
+  expect(doc.find_first('//premis:objectIdentifierType', NS).content).to eql("URI")
+  expect(doc.find_first('//premis:objectIdentifierValue', NS).content).to eql("info:fcla/code/pim/wip.png")
 end
 
 Then /^it should have an IEID that matches my input$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('//premis:linkingIntellectualEntityIdentifierType', NS).content.should eql("URI")
-  doc.find_first('//premis:linkingIntellectualEntityIdentifierValue', NS).content.should eql("info:fcla/code/pim")
+  expect(doc.find_first('//premis:linkingIntellectualEntityIdentifierType', NS).content).to eql("URI")
+  expect(doc.find_first('//premis:linkingIntellectualEntityIdentifierValue', NS).content).to eql("info:fcla/code/pim")
 end
 
 Then /^all linking objects should have matching identifiers$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('//premis:linkingObjectIdentifierType', NS).content.should eql("URI")
-  doc.find_first('//premis:linkingObjectIdentifierValue', NS).content.should eql("info:fcla/code/pim/wip.png")
+  expect(doc.find_first('//premis:linkingObjectIdentifierType', NS).content).to eql("URI")
+  expect(doc.find_first('//premis:linkingObjectIdentifierValue', NS).content).to eql("info:fcla/code/pim/wip.png")
 end
 
 Given /^I don't provide the object identifier type$/ do
@@ -71,7 +71,7 @@ Given /^I don't provide the object identifier type$/ do
 end
 
 Then /^I should get an error$/ do
-  last_response.status.should == 400
+  expect(last_response.status).to eql 400
 end
 
 Given /^I don't provide the object identifier value$/ do
@@ -81,7 +81,7 @@ end
 
 Then /^it should have an originalName that matches the upload filename or url$/ do
     doc = LibXML::XML::Parser.string(last_response.body).parse
-    doc.find_first('//premis:originalName', NS).content.should == case @thing
+    expect(doc.find_first('//premis:originalName', NS).content).to eql case @thing
       when 'file'
         "wip.png"
       when 'url'
@@ -101,34 +101,34 @@ Then /^The bitstream ids should be correct$/ do
   # one file object
   doc = LibXML::XML::Parser.string(last_response.body).parse
   file_objects = doc.find "//premis:object[@xsi:type='file']", NS
-  file_objects.should have_exactly(1).items
+  expect(file_objects).to have(1).items
   f_type = file_objects.first.find_first('premis:objectIdentifier/premis:objectIdentifierType', NS).content.strip
-  f_type.should_not be_empty
+  expect(f_type).to_not be_empty
   f_value = file_objects.first.find_first('premis:objectIdentifier/premis:objectIdentifierValue', NS).content.strip
-  f_value.should_not be_empty
+  expect(f_value).to_not be_empty
   
   # should be identified
   bs_objects = doc.find "//premis:object[@xsi:type='bitstream']", NS
-  bs_objects.should have_at_least(1).items
+  expect(bs_objects).to have_at_least(1).items
   bs_ids = bs_objects.map do |bs_o|
     b_type = bs_o.find_first('premis:objectIdentifier/premis:objectIdentifierType', NS).content.strip
-    b_type.should_not be_empty
+    expect(b_type).to_not be_empty
     b_value = bs_o.find_first('premis:objectIdentifier/premis:objectIdentifierValue', NS).content.strip
-    b_value.should_not be_empty
+    expect(b_value).to_not be_empty
     [b_type, b_value]
   end
 
   # should be no dups
-  bs_ids.size.should == bs_ids.uniq.size
+  expect(bs_ids.size).to eql bs_ids.uniq.size
 
   # should start with the file they belong to
   bs_ids.each do |type, value|
-    type.should == f_type
-    value.should =~ %r{^#{f_value}.+$}
+    expect(type).to eql f_type
+    expect value =~ %r{^#{f_value}.+$}
   end
 
   # relationship ids should match links
   file_links = doc.find "//premis:object[@xsi:type='file']/premis:relationship/premis:linkingObject", NS
-  file_links.should have(0).items
+  expect(file_links).to have(0).items
 end
 

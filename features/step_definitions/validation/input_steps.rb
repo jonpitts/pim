@@ -24,16 +24,15 @@ Given /^I enter PiM XML in the text area$/ do
 end
 
 When /^I validate (.*)$/ do |type|
-  div = case @input_method
+  btn = case @input_method
         when 'uri'
-          '#input-uri'
+          'btn-uri'
         when 'file'
-          '#input-file'
+          'btn-file'
         when 'direct'
-          '#input-direct'
+          'btn-direct'
         end
-        
-  within(div) { click_button 'Validate' }
+  click_button(btn)
 end
 
 Given /^I enter a url with trailing spaces to a PiM document$/ do

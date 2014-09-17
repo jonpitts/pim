@@ -16,14 +16,14 @@ When /^I convert it$/ do
 end
 
 Then /^a METS document should be returned$/ do
-  last_response.status.should == 200
+  expect(last_response.status).to eql 200
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('/mets:mets', XMLNS).should_not be_nil
+  expect(doc.find_first('/mets:mets', XMLNS)).to_not be_nil
 end
 
 Then /^it should have a single PREMIS container within a METS digiprovMD section$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('//mets:digiprovMD//premis:premis', XMLNS).should_not be_nil
+  expect(doc.find_first('//mets:digiprovMD//premis:premis', XMLNS)).to_not be_nil
 end
 
 # bucket specific
@@ -33,22 +33,22 @@ end
 
 Then /^it should have PREMIS object in METS techMD section$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('//mets:techMD//mets:xmlData/premis:object', XMLNS).should_not be_nil
+  expect(doc.find_first('//mets:techMD//mets:xmlData/premis:object', XMLNS)).to_not be_nil
 end
 
 Then /^it should have PREMIS events in METS digiprovMD section$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('//mets:digiprovMD//mets:xmlData/premis:event', XMLNS).should_not be_nil
+  expect(doc.find_first('//mets:digiprovMD//mets:xmlData/premis:event', XMLNS)).to_not be_nil
 end
 
 Then /^it should have PREMIS agents in METS digiprovMD section$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('//mets:digiprovMD//mets:xmlData/premis:agent', XMLNS).should_not be_nil
+  expect(doc.find_first('//mets:digiprovMD//mets:xmlData/premis:agent', XMLNS)).to_not be_nil
 end
 
 Then /^it should have PREMIS rights in METS rightsMD section$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('//mets:rightsMD//mets:xmlData/premis:rights', XMLNS).should_not be_nil
+  expect(doc.find_first('//mets:rightsMD//mets:xmlData/premis:rights', XMLNS)).to_not be_nil
 end
 
 
@@ -57,10 +57,10 @@ Then /^a choice of potential representations will be returned$/ do
 end
 
 Then /^a PREMIS document should be returned$/ do
-  last_response.status.should == 200
+  expect(last_response.status).to eql 200
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('/premis:premis', XMLNS).should_not be_nil
-  doc.find_first('/premis:premis/premis:object', XMLNS).should_not be_nil
+  expect(doc.find_first('/premis:premis', XMLNS)).to_not be_nil
+  expect(doc.find_first('/premis:premis/premis:object', XMLNS)).to_not be_nil
 end
 
 Given /^a PREMIS\-in\-METS document with PREMIS embedded as a container$/ do  
@@ -76,24 +76,24 @@ Given /^an invalid PREMIS\-in\-METS document$/ do
 end
 
 Then /^some validation errors should be returned$/ do
-  last_response.body.should contain('PREMISSSSSSS')
-  last_response.body.should have_selector('div#flash', :content => 'Cannot convert: validation errors exist')
+  expect(last_response.body).to contain('PREMISSSSSSS')
+  expect(last_response.body).to have_selector('div#flash', :content => 'Cannot convert: validation errors exist')
 end
 
 Then /^the status should be (\d{3})$/ do |n|
-  last_response.status.should == n.to_i
+  expect(last_response.status).to eql n.to_i
 end
 
 Then /^it should be valid$/ do
   r = Pim::Validation.new(last_response.body).results
-  r[:fatals].should be_empty
-  r[:errors].should be_empty
+  expect(r[:fatals]).to be_empty
+  expect(r[:errors]).to be_empty
 end
 
 Then /^it should conform to PiM BP$/ do
   r = Pim::Validation.new(last_response.body).results
   unless r[:best_practice].empty?
-    r[:best_practice].each { |e| e[:rule_type].should == 'report' }
+    r[:best_practice].each { |e| expect(e[:rule_type]).to eql 'report' }
   end
 end
 
@@ -106,7 +106,7 @@ end
 
 Then /^it should have an object METS bucket with an ADMID reference to an event METS bucket$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
-  doc.find_first('//mets:techMD[@ID="bitstream-1"]/@ADMID', XMLNS).value.should include('event-2')
+  expect(doc.find_first('//mets:techMD[@ID="bitstream-1"]/@ADMID', XMLNS).value).to include('event-2')
 end
 
 Given /^a PREMIS document with an object linking to an object \(and event\) in a relationship$/ do
@@ -116,8 +116,8 @@ end
 Then /^it should have an object METS bucket with an ADMID reference to an object \(and event\) in a relationship METS bucket$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
   admid = doc.find_first('//mets:techMD[@ID="bitstream-1"]/@ADMID', XMLNS).value
-  admid.should include('object-2')
-  admid.should include('event-1')
+  expect(admid).to include('object-2')
+  expect(admid).to include('event-1')
 end
 
 Given /^a PREMIS document with an event linking to an object$/ do
@@ -127,7 +127,7 @@ end
 Then /^it should have an event METS bucket with an ADMID reference to an object METS bucket$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
   admid = doc.find_first('//mets:digiprovMD[@ID="event-1"]/@ADMID', XMLNS).value
-  admid.should include('object-2')
+  expect(admid).to include('object-2')
 end
 
 Given /^a PREMIS document with an event linking to an agent$/ do
@@ -137,7 +137,7 @@ end
 Then /^it should have an event METS bucket with an ADMID reference to an agent METS bucket$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
   admid = doc.find_first('//mets:digiprovMD[@ID="event-1"]/@ADMID', XMLNS).value
-  admid.should include('agent-1')
+  expect(admid).to include('agent-1')
 end
 
 Given /^a PREMIS document with rights linking to an agent$/ do
@@ -147,7 +147,7 @@ end
 Then /^it should have rights METS bucket with an ADMID reference to an agent METS bucket$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
   admid = doc.find_first('//mets:rightsMD[@ID="rights-1"]/@ADMID', XMLNS).value
-  admid.should include('agent-1')
+  expect(admid).to include('agent-1')
 end
 
 Given /^a PREMIS document with rights linking to an object$/ do
@@ -157,7 +157,7 @@ end
 Then /^it should have rights METS bucket with an ADMID reference to an object METS bucket$/ do
   doc = LibXML::XML::Parser.string(last_response.body).parse
   admid = doc.find_first('//mets:rightsMD[@ID="rights-1"]/@ADMID', XMLNS).value
-  admid.should include('representation-1')
+  expect(admid).to include('representation-1')
 end
 
 Given /^a PREMIS document with a PREMIS object with xmlID (.*)$/ do |xmlID|
@@ -171,26 +171,26 @@ Then /^all the PREMIS xmlIDs and IDRefs should be prefixed with 'premis_'$/ do
   
   # Check all PREMIS xmlIDs
   xmlids = doc.find('//premis:*/@xmlID', XMLNS)
-  xmlids.each { |xmlid| xmlid.value.should match(/^premis_/) }
+  xmlids.each { |xmlid| expect(xmlid.value).to match(/^premis_/) }
   
   # Check all PREMIS IDRefs
   doc.find('//premis:*/@LinkAgentXmlID', XMLNS).each do |idref|
-    idref.value.should match(/^premis_/)
+    expect(idref.value).to match(/^premis_/)
   end
   doc.find('//premis:*/@RelEventXmlID', XMLNS).each do |idref|
-    idref.value.should match(/^premis_/)
+    expect(idref.value).to match(/^premis_/)
   end  
   doc.find('//premis:*/@RelObjectXmlID', XMLNS).each do |idref|
-    idref.value.should match(/^premis_/)
+    expect(idref.value).to match(/^premis_/)
   end
   doc.find('//premis:*/@LinkObjectXmlID', XMLNS).each do |idref|
-    idref.value.should match(/^premis_/)
+    expect(idref.value).to match(/^premis_/)
   end 
   doc.find('//premis:*/@LinkEventXmlID', XMLNS).each do |idref|
-    idref.value.should match(/^premis_/)
+    expect(idref.value).to match(/^premis_/)
   end
   doc.find('//premis:*/@LinkPermissionStatementXmlID', XMLNS).each do |idref|
-    idref.value.should match(/^premis_/)
+    expect(idref.value).to match(/^premis_/)
   end   
 
 end
@@ -214,7 +214,7 @@ Given /^I provide PREMIS which is not version 2\.0$/ do
 end
 
 Then /^I should get a message saying only PREMIS 2\.0 is supported$/ do
-  last_response.body.should == "document must either be PREMIS version 2.0 or METS"
-  last_response.status.should == 400
+  expect(last_response.body).to eql "document must either be PREMIS version 2.0 or METS"
+  expect(last_response.status).to eql 400
 end
 

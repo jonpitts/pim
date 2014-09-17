@@ -17,7 +17,7 @@ end
 
 When /^I run the demo$/ do
   within('#input-file') { click_button 'Describe' }
-  last_response.should be_ok
+  expect(last_response).to be_ok
   premis_description_xml = last_response.body
 
   visit '/'
@@ -28,7 +28,7 @@ When /^I run the demo$/ do
     click_button 'Convert'
   end
 
-  last_response.should be_ok
+  expect(last_response).to be_ok
   pim_description_xml = last_response.body
 
   visit '/'
@@ -39,7 +39,7 @@ When /^I run the demo$/ do
     click_button 'Convert'
   end
 
-  last_response.should be_ok
+  expect(last_response).to be_ok
   pim_description_xml = last_response.body
 end
 

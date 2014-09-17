@@ -12,10 +12,10 @@ When /^I press validate$/ do
 end
 
 Then /^a result document should be returned$/ do
-  last_response.status.should == 200
-
-  last_response.should have_selector('h1') do |tag|
-    tag.text.should =~ /Results/
+  expect(last_response.status).to eql 200
+  #puts last_response.body
+  expect(last_response).to have_selector('h1') do |tag|
+    expect(tag.text).to match /Results/
   end
   
 end
@@ -24,11 +24,11 @@ Then /^it should contain (no|some) formedness errors$/ do |quantity|
 
   case quantity
   when 'no'
-    last_response.body.should have_selector('h2', :content => 'Document is well-formed')
+    expect(last_response.body).to have_selector('h2', :content => 'Document is well-formed')
     
   when 'some'
-    last_response.body.should have_selector('h2', :content => 'Document is not well-formed:')
-    last_response.body.should have_selector('code')
+    expect(last_response.body).to have_selector('h2', :content => 'Document is not well-formed:')
+    expect(last_response.body).to have_selector('code')
     
   end
 
