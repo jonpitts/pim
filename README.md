@@ -21,7 +21,7 @@ Documentation
 
 Requirements
 ------------
-* ruby 1.8.7 (not tested on anything else)
+* ruby 1.9.3
 * cucumber (gem)
 * libxml-ruby (gem)
 * libxslt-ruby (gem)
@@ -42,4 +42,6 @@ Credits
 * [Carol Chou](cchou@ufl.edu): file format description programming
 * [Christian von Kleist](cvonkleist@gmail.com): security & design consultation
 * [Tennille Herron](therron@ufl.edu): logo
+* [Jon Pitts](http://github.com/jonpitts): updates for use with ruby 1.9.3
 * layout based on sdworkz' [invention](http://www.oswd.org/design/preview/id/3293)
+
