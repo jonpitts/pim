@@ -1,11 +1,10 @@
 require 'rubygems'
 require 'bundler'
-Bundler.setup
 
 require 'rspec'
 require 'rack/test'
 require 'webrat'
-require 'mock_server'
+#require 'mock_server'
 
 # setup the app
 app_file = File.join(File.dirname(__FILE__), '../../app.rb')
@@ -20,7 +19,7 @@ end
 
 Sinatra::Application.set :environment, :test
 
-World do
+class MyWorld
 
   def app
     Sinatra::Application
@@ -40,13 +39,18 @@ World do
   include Webrat::Matchers
 end
 
-include MockServer::Methods
+#include MockServer::Methods
 
-mock_server do
+#mock_server do
 
-  get "/wip.png" do
-    f = File.join File.dirname(__FILE__), '..', 'fixtures', "wip.png"
-    send_file f, :type => 'image/png'
-  end
+#  get "/wip.png" do
+#    f = File.join File.dirname(__FILE__), '..', 'fixtures', "wip.png"
+#    send_file f, :type => 'image/png'
+#  end
 
+#end
+
+World do
+    MyWorld.new
 end
+
